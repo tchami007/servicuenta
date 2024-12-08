@@ -1,0 +1,104 @@
+# Compilación de dependencias y salidas
+bin/
+obj/
+
+# Paquetes NuGet
+*.nupkg
+*.snupkg
+# Archivos de lock generados por NuGet
+project.lock.json
+project.fragment.lock.json
+
+# Carpetas de NuGet locales (opcional, pero recomendable)
+packages/
+# Si usa paquetes globales, puedes también excluir la carpeta "global-packages"
+#global-packages/
+
+# Configuraciones del entorno local de Visual Studio
+.vscode/
+.vs/
+.vscode/settings.json
+
+# Archivos de usuario y de configuración de Visual Studio
+*.csproj.user
+*.suo
+*.user
+*.rsuser
+*.dotCover
+*.log
+*.userprefs
+*.sln.docstates
+
+# Directorios de compilación y temporales
+[Tt]emp/
+*.tmp
+*.log
+*.ide
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.Publish.xml
+*.log
+
+# Archivos de publicación
+.publishxml
+app.publish/
+
+# Configuraciones de IIS
+*.vspscc
+*.vssscc
+*.userosscache
+*.suo
+*.userosscache
+
+# Archivos relacionados con la publicación en Azure
+.azuredevops/
+.azureresources/
+
+# Archivos de salida y temporales de Docker
+Dockerfile
+docker-compose*
+.env
+.env.*.local
+
+# Archivos de salida de test
+TestResult*/ 
+*.trx
+*.coverage
+coverage/
+
+# Archivos generados por la herramienta de análisis de código
+_Resharper*/
+_ReSharper.Caches/
+
+# Archivos de la herramienta de medición de cobertura de código
+coverage*.json
+coverage*.xml
+coverage*.info
+
+# Carpeta de migraciones de Entity Framework (puedes incluirla si no quieres subir las migraciones)
+Migrations/
+
+# Archivos generados por Rider
+.idea/
+
+# Ignorar la carpeta local de herramientas globales
+.dotnet_tools/
+
+# Ignorar configuraciones y archivos generados por usuario
+*.suo
+*.user
+appsettings.json
+
+# Configuraciones locales de Kestrel, IIS, o hosting local
+*.swp
+.kestrel/
+
+# Archivos temporales de debug
+*.pid
+*.profraw
+
+# Archivos de logs
+*.log
