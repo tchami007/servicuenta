@@ -5,7 +5,7 @@ using ServiCuentas.Shared;
 
 namespace ServiCuentas.Infraestructure.Repository
 {
-    public class FechaProcesoRepository : IRepository<FechaProceso>
+    public class FechaProcesoRepository : IFechaProcesoRepository
     {
         private readonly AppDBContext _context;
 
@@ -48,6 +48,12 @@ namespace ServiCuentas.Infraestructure.Repository
             return Result<FechaProceso>.Failure("No se pudo identificar la fecha de proceso a eliminar");
         }
 
+        public async Task<bool> EsFechaProceso(DateTime fecha, string descripcion)
+        {
+            var resultado = await _context.FechasProceso.FirstOrDefaultAsync(x=>x.Descripcion==descripcion);
+            return (resultado.Fecha == fecha);
+        }
+
         public async Task<IEnumerable<FechaProceso>> GetAll()
         {
             var resultado = await _context.FechasProceso.ToListAsync();
@@ -71,6 +77,14 @@ namespace ServiCuentas.Infraestructure.Repository
                 return Result<FechaProceso>.Failure($"Error en la recuperacion de la fecha de proceso:{ex.Message}");
             }
             return Result<FechaProceso>.Success(resultado);
+        }
+
+        public async Task<DateTime> GetFecha(string descripcion)
+        {
+            var resultado = await _context.FechasProceso.FirstOrDefaultAsync(x=>x.Descripcion== descripcion);
+            if (resultado == null)
+                return DateTime.MinValue;
+            return (resultado.Fecha);
         }
 
         public async Task<Result<FechaProceso>> UpdateItem(FechaProceso item)

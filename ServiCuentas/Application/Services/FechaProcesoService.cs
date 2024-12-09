@@ -14,9 +14,9 @@ namespace ServiCuentas.Application.Services
     }
     public class FechaProcesoService : IFechaProcesoService
     {
-        private readonly IRepository<FechaProceso> _repository; 
+        private readonly IFechaProcesoRepository _repository; 
 
-        public FechaProcesoService(IRepository<FechaProceso> repository)
+        public FechaProcesoService(IFechaProcesoRepository repository)
         {
             _repository = repository;
         }

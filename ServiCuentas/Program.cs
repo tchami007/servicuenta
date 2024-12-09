@@ -35,6 +35,7 @@ builder.Services.Configure<PaginationSettings>(builder.Configuration.GetSection(
 builder.Services.AddAutoMapper(typeof(Program));
 
 // Cargar Validadores
+builder.Services.AddScoped<FechaProcesoRepository>();
 builder.Services.AddScoped<CuentaValidator>();
 builder.Services.AddScoped<FuncionRequestValidator>();
 builder.Services.AddScoped<FuncionRequestAsientoValidator>();
@@ -51,7 +52,7 @@ builder.Services.AddScoped<IValidator<FuncionRequestAsientoDTO>, FuncionRequestA
 // Repository
 
 builder.Services.AddScoped<ICuentaRepository, CuentaRepository>();
-builder.Services.AddScoped<IRepository<FechaProceso>, FechaProcesoRepository>();
+builder.Services.AddScoped<IFechaProcesoRepository, FechaProcesoRepository>();
 builder.Services.AddScoped<IMovimientoRepository, MovimientoRepository>();
 builder.Services.AddScoped<INumeracionRepository, NumeracionRepository>();
 
