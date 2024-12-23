@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ServiCuentas.Application.DTOs;
 using ServiCuentas.Application.Services;
+using ServiCuentas.Application.Services.BatchServices;
 using ServiCuentas.Application.Services.FuncionServices;
 using ServiCuentas.Application.Validators;
 using ServiCuentas.Data;
 using ServiCuentas.Infraestructure.Repository;
-using ServiCuentas.Model;
 using ServiCuentas.Shared;
+using ServiCuentas.Shared.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,12 @@ builder.Services.AddDbContext<AppDBContext>(options =>
 // Cargar configuración desde appsettings.json
 builder.Services.Configure<PaginationSettings>(builder.Configuration.GetSection("Pagination"));
 
+builder.Services.Configure<Globales>(builder.Configuration.GetSection("Globales"));
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<Globales>>().Value);
+
+builder.Services.Configure<BatchProcessConfig>(builder.Configuration.GetSection("BatchProcessConfig"));
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<BatchProcessConfig>>().Value);
+
 // Cargar configuracion de automapper
 builder.Services.AddAutoMapper(typeof(Program));
 
@@ -50,7 +57,6 @@ builder.Services.AddScoped<IValidator<FuncionRequestAsientoDTO>, FuncionRequestA
 
 // Cargar configuracion de dependencias
 // Repository
-
 builder.Services.AddScoped<ICuentaRepository, CuentaRepository>();
 builder.Services.AddScoped<IFechaProcesoRepository, FechaProcesoRepository>();
 builder.Services.AddScoped<IMovimientoRepository, MovimientoRepository>();
@@ -59,9 +65,12 @@ builder.Services.AddScoped<INumeracionRepository, NumeracionRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Services
-
+builder.Services.AddScoped<IBatchProcess<BatchProcessConfig>, BatchProcessService>();
+builder.Services.AddScoped<ICbuService, CbuService>();
+builder.Services.AddScoped<ICbuCalculator, CbuCalculator>();
 builder.Services.AddScoped<ICuentaService, CuentaService>();
 builder.Services.AddScoped<IFechaProcesoService, FechaProcesoService>();
+builder.Services.AddScoped<INumeracionService, NumeracionService>();
 builder.Services.AddScoped<IMovimientoService, MovimientoService>();
 
 
@@ -80,7 +89,7 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
     {
         Version = "v1",
-        Title = "ServiCuenta - Modulo de cuentas al saldo",
+        Title = "ServiCuentas - Modulo de gestion de cuentas al saldo",
         Description = "APIs para implementar modulo de cuentas al saldo: ABM de cuentas, funciones de debitos y creditos, movimientos y consultas varias",
         Contact = new Microsoft.OpenApi.Models.OpenApiContact
         {
@@ -105,9 +114,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(options => {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
         // Hace que solo sea documentacion
-        //options.SupportedSubmitMethods(Array.Empty<Swashbuckle.AspNetCore.SwaggerUI.SubmitMethod>());
+        // options.SupportedSubmitMethods(Array.Empty<Swashbuckle.AspNetCore.SwaggerUI.SubmitMethod>());
         // Hace que Swagger esté disponible en la raíz.
-        //options.RoutePrefix = ""; 
+        // options.RoutePrefix = ""; 
     });
 }
 

@@ -24,8 +24,13 @@ namespace ServiCuentas.Data
                     entity.Property(e => e.Capital).IsRequired().HasPrecision(12, 2).HasDefaultValue(0);
                     entity.Property(e => e.Interes).IsRequired().HasPrecision(12, 2).HasDefaultValue(0);
                     entity.Property(e => e.Ajuste).HasPrecision(12, 2).HasDefaultValue(0);
+                    entity.Property(e => e.DevengadoAcumulado).HasPrecision(12, 2).HasDefaultValue(0);
                     entity.Property(e => e.Estado).IsRequired().HasDefaultValue(0);
                     entity.Property(e => e.Descripcion).HasMaxLength(50);
+                    entity.Property(e => e.Cvu).HasMaxLength(22);
+                    entity.Property(e => e.Alias).HasMaxLength(20);
+                    entity.Property(e => e.Email).IsRequired().HasMaxLength(100);
+                    entity.Property(e => e.Celular).IsRequired().HasMaxLength(20);
                 }
             );
             modelBuilder.Entity<FechaProceso>(entity =>
@@ -51,6 +56,7 @@ namespace ServiCuentas.Data
                 entity.Property(e => e.BaseImponible).HasPrecision(12, 2).HasDefaultValue(0);
                 entity.Property(e => e.Alicuota).HasPrecision(6, 2).HasDefaultValue(0);
                 entity.Property(e => e.SaldoAnterior).HasPrecision(12, 2).HasDefaultValue(0);
+                entity.Property(e => e.Descripcion).HasMaxLength(50);
             });
             modelBuilder.Entity<Numeracion>(entity =>
             {

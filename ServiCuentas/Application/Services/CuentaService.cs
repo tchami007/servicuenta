@@ -4,6 +4,7 @@ using ServiCuentas.Application.Validators;
 using ServiCuentas.Infraestructure.Repository;
 using ServiCuentas.Model;
 using ServiCuentas.Shared;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ServiCuentas.Application.Services
 {
@@ -15,7 +16,11 @@ namespace ServiCuentas.Application.Services
         Task<Result<CuentaDTO>> UpdateCuenta(int id,CuentaDTO cuenta);
         Task<Result<CuentaDTO>> GetCuentaById(int id);
         Task<Result<CuentaDTO>> GetCuentaByNumeroCuenta(decimal numero);
-        Task<IEnumerable<CuentaDTO>> GetAllCuentas(CuentaFilterDTO filter, string order, int page, int pageSize);
+        Task<IEnumerable<CuentaResponseDTO>> GetAllCuentas(CuentaFilterDTO filter, string order, int page, int pageSize);
+        Task<IEnumerable<CuentaDTO>> GetCuentasByEmail(string email);
+        Task<IEnumerable<CuentaDTO>> GetCuentasByCelular(string celular);
+        Task<Result<CuentaResponseDTO>> GetCuentaByCvu(string cvu);
+        Task<Result<CuentaResponseDTO>> GetCuentaByAlias(string alias);
     }
 
     public class CuentaService : ICuentaService
@@ -119,11 +124,33 @@ namespace ServiCuentas.Application.Services
             return Result<CuentaDTO>.Success(resultado);
         }
 
-        public async Task<IEnumerable<CuentaDTO>> GetAllCuentas(CuentaFilterDTO filter, string order, int page, int pageSize)
+        public async Task<IEnumerable<CuentaResponseDTO>> GetAllCuentas(CuentaFilterDTO filter, string order, int page, int pageSize)
         {
             var resultado = await _repository.GetAllFilterOrderPage(filter, order, page, pageSize);
 
-            return _mapper.Map<IEnumerable<CuentaDTO>>(resultado);
+            return _mapper.Map<IEnumerable<CuentaResponseDTO>>(resultado);
+        }
+
+        public async Task<Result<CuentaResponseDTO>> GetCuentaByCvu(string cvu)
+        {
+            var resultado = await _repository.GetCuentaByCvu(cvu);
+            if (resultado._success) 
+            {
+                var retorno = _mapper.Map<CuentaResponseDTO>(resultado._value);
+                return Result<CuentaResponseDTO>.Success(retorno);
+            }
+            return Result<CuentaResponseDTO>.Failure(resultado._errorMessage);
+        }
+
+        public async Task<Result<CuentaResponseDTO>> GetCuentaByAlias(string alias)
+        {
+            var resultado = await _repository.GetCuentaByAlias(alias);
+            if (resultado._success)
+            {
+                var retorno = _mapper.Map<CuentaResponseDTO>(resultado._value);
+                return Result<CuentaResponseDTO>.Success(retorno);
+            }
+            return Result<CuentaResponseDTO>.Failure(resultado._errorMessage);
         }
 
         public async Task<Result<CuentaDTO>> GetCuentaById(int id)
@@ -152,6 +179,21 @@ namespace ServiCuentas.Application.Services
             }
             var cuenta = resultado.First();
             return Result<CuentaDTO>.Success(_mapper.Map<CuentaDTO>(cuenta));
+        }
+
+        public async Task<IEnumerable<CuentaDTO>> GetCuentasByCelular(string celular)
+        {
+            var resultado = await _repository.GetCuentasByCelular(celular);
+            var retorno = _mapper.Map<IEnumerable<CuentaDTO>>(resultado);
+            return retorno;
+        }
+
+        public async Task<IEnumerable<CuentaDTO>> GetCuentasByEmail(string email)
+        {
+            var resultado = await _repository.GetCuentasByEmail(email);
+            var retorno = _mapper.Map<IEnumerable<CuentaDTO>>(resultado);
+            return retorno;
+
         }
 
         public async Task<Result<CuentaDTO>> UpdateCuenta(int id, CuentaDTO cuenta)

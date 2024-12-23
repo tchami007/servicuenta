@@ -15,9 +15,9 @@ namespace ServiCuentas.Application.Services
     }
     public class NumeracionService : INumeracionService
     {
-        private readonly IRepository<Numeracion> _repository;
+        private readonly INumeracionRepository _repository;
 
-        public NumeracionService(IRepository<Numeracion> repository)
+        public NumeracionService(INumeracionRepository repository)
         {
             _repository = repository;
         }

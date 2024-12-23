@@ -2,17 +2,19 @@
 using ServiCuentas.Application.DTOs;
 using ServiCuentas.Application.Services;
 
-namespace ServiCuentas.Controllers
+namespace ServiCuentas.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class CuentaController : ControllerBase
     {
         private readonly ICuentaService _service;
+        private readonly ICbuService _cbuService;
 
-        public CuentaController(ICuentaService service)
+        public CuentaController(ICuentaService service, ICbuService cbuService)
         {
             _service = service;
+            _cbuService = cbuService;
         }
 
         /// <summary>
@@ -25,7 +27,7 @@ namespace ServiCuentas.Controllers
         {
             var resultado = await _service.GetCuentaById(id);
             // Devuelve 404 si no encuentra
-            if (!resultado._success || resultado._value==null)
+            if (!resultado._success || resultado._value == null)
             {
                 return NotFound();
             }
@@ -73,7 +75,7 @@ namespace ServiCuentas.Controllers
         /// <param name="cuenta">DTO que contiene los datos necesarios para la creacion de una cuenta</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<CuentaDTO>> AddCuenta([FromBody]CuentaDTO cuenta)
+        public async Task<ActionResult<CuentaDTO>> AddCuenta([FromBody] CuentaDTO cuenta)
         {
             var resultado = await _service.AddCuenta(cuenta);
             // Devuelve error
@@ -111,7 +113,6 @@ namespace ServiCuentas.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteCuenta(int id)
         {
@@ -128,6 +129,89 @@ namespace ServiCuentas.Controllers
             }
             // devuelve 204 si funciona ok
             return NoContent();
+        }
+        /// <summary>
+        /// GetCuentaByNumeroCuenta: Recupera la cuenta con el numero de cuenta dado.
+        /// </summary>
+        /// <param name="numeroCuenta">decimal: Numero de la cuenta a buscar</param>
+        /// <returns>cuentaDTO: objeto con los datos de la cuenta buscada</returns>
+        [HttpGet("por_numerocuenta")]
+        public async Task<ActionResult<CuentaDTO>> GetCuentaByNumeroCuenta([FromQuery] decimal numeroCuenta)
+        {
+            var resultado = await _service.GetCuentaByNumeroCuenta(numeroCuenta);
+            if (resultado._success)
+            {
+                return Ok(resultado._value);
+            }
+            return NotFound(resultado);
+        }
+        /// <summary>
+        /// GetCuentasByCelular: Recupera la lista de cuentas que responden al celular de registro dado.
+        /// </summary>
+        /// <param name="celular">string: indica el numero de celcular de busqueda</param>
+        /// <returns>Lista de Cuenta DTO que responde al email dado</returns>
+        [HttpGet("por_celular")]
+        public async Task<ActionResult> GetCuentasByCelular([FromQuery] string celular)
+        {
+            var resultado = await _service.GetCuentasByCelular(celular);
+            return Ok(resultado);
+        }
+        /// <summary>
+        /// GentCuentasByEmail: Reculera la lista de cuentas que responden al email de registro dado
+        /// </summary>
+        /// <param name="email">string: indica la direccion de correo de busqueda</param>
+        /// <returns>Lista de CuentaDTO que responde al celular dado</returns>
+        [HttpGet("por_email")]
+        public async Task<ActionResult> GetCuentasByEmail([FromQuery] string email)
+        {
+            var resultado = await _service.GetCuentasByEmail(email);
+            return Ok(resultado);
+        }
+        /// <summary>
+        /// GetCuentaByCvu: Recupera la cuenta que responde al cvu de registro dado
+        /// </summary>
+        /// <param name="cvu">string: Indica el valor del cvu de busqueda</param>
+        /// <returns>CuentaDTO: objeto con los datos de la cuenta buscada</returns>
+        [HttpGet("por_cvu")]
+        public async Task<ActionResult<CuentaResponseDTO>> GetCuentaByCvu([FromQuery] string cvu)
+        {
+            var resultado = await _service.GetCuentaByCvu(cvu);
+            if (resultado._success)
+            {
+                return Ok(resultado._value);
+            }
+            return NotFound(resultado);
+        }
+        /// <summary>
+        /// GetCuentaByAlias: Recupera la cuenta que responde al alias de registro dado
+        /// </summary>
+        /// <param name="alias">string: Indica el valor del alias de busqueda</param>
+        /// <returns>CuentaResponseDTO: objeto con los datos de la cuenta buscada</returns>
+        [HttpGet("por_alias")]
+        public async Task<ActionResult<CuentaResponseDTO>> GetCuentaByAlias([FromQuery] string alias)
+        {
+            var resultado = await _service.GetCuentaByAlias(alias);
+            if (resultado._success)
+            {
+                return Ok(resultado._value);
+            }
+            return NotFound(resultado);
+        }
+
+        /// <summary>
+        /// CalcularCvu: Realiza el calculo y actualizacion del cvu de la cuenta
+        /// </summary>
+        /// <param name="numeroCuenta">decimal que indica el numero de la cuenta</param>
+        /// <returns>objeto con el numero de cvu generado</returns>
+        [HttpPost("CalcularCvu")]
+        public async Task<ActionResult> CalcularCvu(decimal numeroCuenta)
+        {
+            var resultado = await _cbuService.CalcularCBU(numeroCuenta);
+            if (!resultado._success)
+            {
+                return NotFound(resultado._errorMessages);
+            }
+            return Ok(resultado);
         }
     }
 }

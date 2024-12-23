@@ -17,8 +17,19 @@ namespace ServiCuentas.Model
         [Required]
         public decimal Interes { get; set; } = 0;
         public decimal Ajuste { get; set; } = 0;
+        public decimal DevengadoAcumulado { get; set; } = 0;
         [Required]
         public int Estado { get; set; } = 0;
+        [MaxLength(11)]
+        public string? Cvu { get; set; }
+        [MaxLength(22)]
+        public string? Alias { get; set; }
+        [Required]
+        [MaxLength(100)]
+        public string? Email { get; set; }
+        [Required]
+        [MaxLength(20)]
+        public string? Celular { get; set; }
 
         // Relacion
         public ICollection<Movimiento>? Movimientos { get; set; }

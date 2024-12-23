@@ -12,5 +12,6 @@ namespace ServiCuentas.Application.DTOs
         public int CodigoMovimiento { get; set; }
         [Required]
         public Decimal Importe { get; set; }
+        public string? Descripcion { get; set; }
     }
 }

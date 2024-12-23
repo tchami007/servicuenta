@@ -122,7 +122,8 @@ namespace ServiCuentas.Application.Services.FuncionServices
                         FechaReal = DateTime.Now,
                         NumeroComprobante = funcion.NumeroComprobante,
                         CodigoMovimiento = 1 /*Credito*/,
-                        SaldoAnterior = saldoAnterior
+                        SaldoAnterior = saldoAnterior,
+                        Descripcion = "Contrasiento Credito"
                     };
 
                     var registroMovimiento = await _unit._movimientoRepository.AddItem(nuevoMovimiento);
@@ -207,7 +208,8 @@ namespace ServiCuentas.Application.Services.FuncionServices
                         FechaReal = DateTime.Now,
                         NumeroComprobante = busquedaComprobante._value.UltimoNumero,
                         CodigoMovimiento = 1 /*Credito*/,
-                        SaldoAnterior = saldoAnterior
+                        SaldoAnterior = saldoAnterior,
+                        Descripcion = funcion.Descripcion
                     };
 
                     var registroMovimiento = await _unit._movimientoRepository.AddItem(nuevoMovimiento);

@@ -24,6 +24,7 @@ namespace ServiCuentas.Model
         public Decimal BaseImponible { get; set; } = 0;
         public Decimal Alicuota { get; set; } = 0;
         public Decimal SaldoAnterior { get; set; } = 0;
+        public string Descripcion { get; set; }
 
         // Relacion
         [ForeignKey ("IdCuenta")]

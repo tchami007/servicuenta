@@ -9,6 +9,7 @@ namespace ServiCuentas.Application.Profiles
         public MappingProfile() 
         {
             CreateMap<Cuenta, CuentaDTO>().ReverseMap();
+            CreateMap<Cuenta, CuentaResponseDTO>().ReverseMap();
             CreateMap<Movimiento, MovimientoDTO>().ReverseMap();
         }
     }

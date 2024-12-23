@@ -108,7 +108,8 @@ namespace ServiCuentas.Infraestructure.Repository
                     Importe = m.Importe,
                     BaseImponible = m.BaseImponible,
                     Alicuota = m.Alicuota,
-                    SaldoAnterior = m.SaldoAnterior
+                    SaldoAnterior = m.SaldoAnterior,
+                    Descripcion = m.Descripcion
                 }).ToListAsync();
 
             return resultado;

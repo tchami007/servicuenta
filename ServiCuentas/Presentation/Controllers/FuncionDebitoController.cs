@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ServiCuentas.Application.DTOs;
 using ServiCuentas.Application.Services.FuncionServices;
 
-namespace ServiCuentas.Controllers
+namespace ServiCuentas.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

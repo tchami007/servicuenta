@@ -2,7 +2,7 @@
 
 namespace ServiCuentas.Application.DTOs
 {
-    public class CuentaDTO
+    public class CuentaResponseDTO
     {
         [Key]
         public int IdCuenta { get; set; }
@@ -26,5 +26,10 @@ namespace ServiCuentas.Application.DTOs
         [Required]
         [MaxLength(20)]
         public string? Celular { get; set; }
+        [MaxLength(22)]
+        public string? Cvu { get; set; }
+        [MaxLength(20)]
+        public string Alias { get; set; }
+
     }
 }

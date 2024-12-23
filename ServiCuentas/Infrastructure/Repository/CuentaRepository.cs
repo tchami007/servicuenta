@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿                                                                                                                                                                                                                                                                                                                                                                                                using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ServiCuentas.Application.DTOs;
 using ServiCuentas.Data;
@@ -11,7 +11,7 @@ namespace ServiCuentas.Infraestructure.Repository
     {
         private readonly AppDBContext _context; 
         private readonly PaginationSettings _pagination;
-
+                                                                                                                                                                                                                                                        
         public CuentaRepository(AppDBContext context, IOptions<PaginationSettings> pagination) 
         { 
             _context = context; 
@@ -128,7 +128,12 @@ namespace ServiCuentas.Infraestructure.Repository
                     Capital = c.Capital,
                     Interes = c.Interes,
                     Ajuste = c.Ajuste,
-                    Estado = c.Estado
+                    DevengadoAcumulado = c.DevengadoAcumulado,
+                    Estado = c.Estado,
+                    Cvu = c.Cvu,
+                    Alias = c.Alias,
+                    Email = c.Email,
+                    Celular = c.Celular
                 }).ToListAsync();
 
             return resultado;
@@ -178,6 +183,67 @@ namespace ServiCuentas.Infraestructure.Repository
         {
             var resultado = await _context.Cuentas.AnyAsync(x=>x.NumeroCuenta == NumeroCuenta);
             return resultado;
+        }
+        public async Task<bool> ExisteNumeroCuenta(string alias)
+        {
+            var resultado = await _context.Cuentas.AnyAsync(x => x.Alias == alias);
+            return resultado;
+
+        }
+
+        public async Task<Result<Cuenta>> GetCuentaByNumeroCuenta(decimal NumeroCuenta)
+        {
+            Cuenta resultado = new Cuenta();
+
+            try
+            {
+                resultado = await _context.Cuentas.FirstOrDefaultAsync(x => x.NumeroCuenta== NumeroCuenta);
+            }
+            catch (Exception ex)
+            {
+                return Result<Cuenta>.Failure($"Error en la recuperacion:{ex.Message}");
+            }
+            return Result<Cuenta>.Success(resultado);
+
+        }
+
+        public async Task<IEnumerable<Cuenta>> GetCuentasByEmail(string email)
+        {
+            var resultado = await _context.Cuentas.Where(x=> x.Email == email).ToListAsync();
+            return resultado;
+        }
+
+        public async Task<IEnumerable<Cuenta>> GetCuentasByCelular(string celular)
+        {
+            var resultado = await _context.Cuentas.Where(x => x.Celular == celular).ToListAsync();
+            return resultado;
+        }
+
+        public async Task<Result<Cuenta>> GetCuentaByCvu(string cvu)
+        {
+            var resultado = await _context.Cuentas.Where(x => x.Cvu == cvu).ToListAsync();
+            Cuenta cuentaRetorno = new Cuenta();
+            if (resultado.Count() == 1) 
+            {
+                cuentaRetorno = resultado.FirstOrDefault();
+                return Result<Cuenta>.Success(cuentaRetorno);
+            }
+
+            return Result<Cuenta>.Failure($"No se pudo encontrar la cuenta del cvu: {cvu}");
+        }
+
+        public async Task<Result<Cuenta>> GetCuentaByAlias(string alias)
+        {
+            var resultado = await _context.Cuentas.Where(x => x.Alias == alias).ToListAsync();
+            Cuenta cuentaRetorno = new Cuenta();
+            if (resultado.Count() == 1)
+            {
+                cuentaRetorno = resultado.FirstOrDefault();
+                return Result<Cuenta>.Success(cuentaRetorno);
+            }
+
+            return Result<Cuenta>.Failure($"Error: No se pudo encontrar la cuenta del alias: {alias}");
+
         }
     }
 }
